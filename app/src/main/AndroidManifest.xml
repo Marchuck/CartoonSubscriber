@@ -23,25 +23,12 @@
             </intent-filter>
         </activity>
 
-        <receiver
-            android:name=".PeriodicHttpRequest"
-            android:process=":remote">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="pl.marczak.cartoonsubscriber.START_ALARM" />
-            </intent-filter>
-        </receiver>
         <receiver android:name=".AlarmManagerBroadcastReceiver" />
-
-        <service
-            android:name=".FeedService"
-            android:enabled="true"
-            android:exported="true" />
 
         <activity
             android:name=".RecentEpisodeActivity"
             android:label="@string/title_activity_recent_episode"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>
