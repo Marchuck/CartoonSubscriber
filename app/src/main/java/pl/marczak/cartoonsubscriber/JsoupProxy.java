@@ -4,6 +4,8 @@ import android.util.Log;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.IOException;
 
@@ -30,5 +32,14 @@ public class JsoupProxy {
                 subscriber.onCompleted();
             }
         });
+    }
+    public static void printElement(String TAG, Element e) {
+        Log.d(TAG, "element: html: " + e.html() + ", text: " + e.text() + ", val: " + e.val() + ", data: "
+                + e.data() + ", id: " + e.id() + ", nodeName: " + e.nodeName() + ", tag: " + e.tag()
+                + ", tagName: " + e.tagName() + ", \n" + e.outerHtml());
+    }
+
+    public static void printElements(String TAG, Elements elements) {
+        for (Element el : elements) printElement(TAG, el);
     }
 }

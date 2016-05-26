@@ -25,8 +25,17 @@ public class AllCartoonsProvider {
             @Override
             public List<Cartoon> call(Document document) {
                 List<Cartoon> cartoons = new ArrayList<Cartoon>();
+                Log.e(TAG, "printing li's");
                 Elements elements = document.select("li");
-                for (Element e : elements) Log.d(TAG, "next : " + e.text() + "|-| " + e.html());
+                JsoupProxy.printElements(TAG, elements);
+                for (Element el : elements) {
+                    String[] aa = el.html().split("\"");
+                    if (aa.length > 1) {
+                        cartoons.add(new Cartoon(el.text(), aa[1]));
+                 //       Log.d(TAG, "title: " + el.text() + '\n' + "url: " + aa[1]);
+                    }
+                }
+
                 return cartoons;
             }
         });

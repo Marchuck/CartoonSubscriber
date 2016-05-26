@@ -6,5 +6,22 @@ package pl.marczak.cartoonsubscriber.cartoononline;
  */
 public class Cartoon {
     public String name;
+
+
+
     public String url;
+
+    public Cartoon() {
+    }
+
+    public Cartoon(String name, String url) {
+        this.name = name;
+        this.url = url;
+    }
+    @Override
+    public String toString() {
+        return
+                "name: " + name +
+                        ", url: " + url;
+    }
 }

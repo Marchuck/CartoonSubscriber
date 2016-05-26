@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.content, CartoonFragment.newInstance(0))
+                .replace(R.id.content, CartoonFragment.newInstance( ))
                 .commitAllowingStateLoss();
     }
 

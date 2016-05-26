@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import pl.marczak.cartoonsubscriber.cartoononline.Cartoon;
@@ -13,10 +14,17 @@ import pl.marczak.cartoonsubscriber.cartoononline.Cartoon;
 
 public class MyCartoonRecyclerViewAdapter extends RecyclerView.Adapter<MyCartoonRecyclerViewAdapter.ViewHolder> {
 
-    private   List<Cartoon> mValues;
-    CartoonFragment.OnListFragmentInteractionListener mListener;
-    public MyCartoonRecyclerViewAdapter( CartoonFragment.OnListFragmentInteractionListener listener) {
+    private List<Cartoon> mValues = new ArrayList<>();
 
+    public void refresh(List<Cartoon> cartoons) {
+        mValues = cartoons;
+        notifyItemRangeChanged(0, getItemCount());
+        notifyDataSetChanged();
+    }
+
+    CartoonFragment.OnListFragmentInteractionListener mListener;
+
+    public MyCartoonRecyclerViewAdapter(CartoonFragment.OnListFragmentInteractionListener listener) {
         mListener = listener;
     }
 
@@ -51,18 +59,18 @@ public class MyCartoonRecyclerViewAdapter extends RecyclerView.Adapter<MyCartoon
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mIdView;
-        public final TextView mContentView;
+       // public final TextView mContentView;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.id);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mIdView = (TextView) view.findViewById(R.id.text);
+//            mContentView = (TextView) view.findViewById(R.id.content);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + mIdView.getText() + "'";
         }
     }
 }
