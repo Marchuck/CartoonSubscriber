@@ -15,14 +15,15 @@ public class MainActivity extends AppCompatActivity {
     public static final String TAG = MainActivity.class.getSimpleName();
     FloatingActionButton fab;
     AlarmManagerBroadcastReceiver alarm;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-          long _12hoursInMillis = TimeUnit.MINUTES.toMillis(5);
-        Log.d(TAG, "onCreate: "+_12hoursInMillis);
+        long _12hoursInMillis = TimeUnit.MINUTES.toMillis(5);
+        Log.d(TAG, "onCreate: " + _12hoursInMillis);
 
         alarm = new AlarmManagerBroadcastReceiver();
         fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -31,13 +32,16 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Log.d(TAG, "onClick: ");
                 Context context = MainActivity.this.getApplicationContext();
-                if(alarm != null){
+                if (alarm != null) {
                     alarm.SetAlarm(context);
-                }else{
+                } else {
                     Toast.makeText(context, "Alarm is null", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.content, CartoonFragment.newInstance(0))
+                .commitAllowingStateLoss();
     }
 
 
