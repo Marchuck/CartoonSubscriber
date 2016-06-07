@@ -3,6 +3,7 @@ package pl.marczak.cartoonsubscriber;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
@@ -20,9 +21,10 @@ import rx.functions.Action1;
 public class CartoonFragment extends Fragment {
     public static final String TAG = CartoonFragment.class.getSimpleName();
     private OnListFragmentInteractionListener mListener;
-    RecyclerView recyclerView;
+    RecyclerView recyclerView, fakeRecyclerView;
     SearchView searchView;
     private SearchView.OnQueryTextListener txtChangeListener;
+    private LinearLayoutManager linearLayoutManager;
 
     public CartoonFragment() {
     }
@@ -42,13 +44,22 @@ public class CartoonFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_cartoon_list, container, false);
-
+        Log.d(TAG, "onCreateView: ");
         // Set the adapter
         searchView = (SearchView) view.findViewById(R.id.search_view);
         searchView.setOnQueryTextListener(txtChangeListener);
+
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        fakeRecyclerView = (RecyclerView) view.findViewById(R.id.fake_recycler_view);
         final MyCartoonRecyclerViewAdapter adapter = new MyCartoonRecyclerViewAdapter(mListener);
+        final FakeCartoonAdapter fakeAdapter = new FakeCartoonAdapter(4);
+
+        fakeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        fakeRecyclerView.setAdapter(fakeAdapter);
         recyclerView.setAdapter(adapter);
+
         searchView.setVisibility(View.GONE);
         recyclerView.setVisibility(View.GONE);
         RxExtensions.resultsOnUi(AllCartoonsProvider.getCartoons()).subscribe(new Action1<List<Cartoon>>() {
@@ -57,7 +68,8 @@ public class CartoonFragment extends Fragment {
                 for (Cartoon c : cartoons) Log.i(TAG, "next cartoon: " + c);
                 searchView.setVisibility(View.VISIBLE);
                 recyclerView.setVisibility(View.VISIBLE);
-
+                fakeAdapter.clearCallbacks();
+                fakeRecyclerView.setVisibility(View.GONE);
                 adapter.refresh(cartoons);
             }
         }, new Action1<Throwable>() {
@@ -95,7 +107,7 @@ public class CartoonFragment extends Fragment {
         mListener = new OnListFragmentInteractionListener() {
             @Override
             public void onItemSelected(String url) {
-
+                Log.d(TAG, "onItemSelected: " + url);
             }
         };
     }

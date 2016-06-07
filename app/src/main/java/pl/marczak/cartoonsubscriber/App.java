@@ -1,13 +1,11 @@
 package pl.marczak.cartoonsubscriber;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.jakewharton.threetenabp.AndroidThreeTen;
 
-import java.lang.ref.SoftReference;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.LinkedTransferQueue;
 
 /**
  * @author Lukasz Marczak
@@ -17,11 +15,15 @@ public class App extends Application {
 
 
     public List<String> episodes;
-    public static App instance;
+
     @Override
     public void onCreate() {
         super.onCreate();
-        instance = this;
         AndroidThreeTen.init(this);
+    }
+
+    public static App getInstance(Context context) {
+        return ((App) context);
+
     }
 }

@@ -36,7 +36,7 @@ public class AlarmManagerBroadcastReceiver extends BroadcastReceiver {
                     @Override
                     public void call(List<String> strings) {
                         Log.d("", "call: ");
-                        App.instance.episodes = strings;
+                        App.getInstance(context).episodes = strings;
                         NotificationCompat.Builder mBuilder =
                                 new NotificationCompat.Builder(context)
                                         .setSmallIcon(R.drawable.regular)

@@ -19,7 +19,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.VH> {
     List<String> dataSet;
 
     public NewsAdapter() {
-        this.dataSet = App.instance.episodes;
         if (dataSet == null) dataSet = new ArrayList<String>();//{{add("no ");}};
     }
 
