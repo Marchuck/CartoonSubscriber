@@ -1,4 +1,4 @@
-package pl.marczak.cartoonsubscriber;
+package pl.marczak.cartoonsubscriber.db;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -10,16 +10,29 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import pl.marczak.cartoonsubscriber.R;
+
 /**
  * @author Lukasz Marczak
- * @since 08.05.16.
+ * @since 12.06.16.
  */
-public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.VH> {
+public class CartoonAdapter extends RecyclerView.Adapter<CartoonAdapter.VH> {
 
-    List<String> dataSet;
+    public void setDataSet(List<Cartoon> cartoons) {
+        dataSet = cartoons;
+        notifyItemRangeChanged(0, getItemCount());
+        notifyDataSetChanged();
 
-    public NewsAdapter() {
-        if (dataSet == null) dataSet = new ArrayList< >();//{{add("no ");}};
+    }
+
+    List<Cartoon> dataSet;
+
+    public CartoonAdapter() {
+        this(new ArrayList<Cartoon>());
+    }
+
+    public CartoonAdapter(List<Cartoon> dataSet) {
+        this.dataSet = dataSet;
     }
 
     @Override
@@ -30,8 +43,9 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.VH> {
 
     @Override
     public void onBindViewHolder(final VH holder, int position) {
-        final String item = dataSet.get(position);
-        holder.textView.setText(item);
+        final Cartoon item = dataSet.get(position);
+        holder.textView.setText(item.title);
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

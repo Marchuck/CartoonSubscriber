@@ -1,4 +1,4 @@
-package pl.marczak.cartoonsubscriber;
+package pl.marczak.cartoonsubscriber.middle_tab;
 
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import pl.marczak.cartoonsubscriber.R;
 
 
 public class FakeCartoonAdapter extends RecyclerView.Adapter<FakeCartoonAdapter.ViewHolder> {

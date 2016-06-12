@@ -1,4 +1,4 @@
-package pl.marczak.cartoonsubscriber;
+package pl.marczak.cartoonsubscriber.utils;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;

@@ -1,4 +1,4 @@
-package pl.marczak.cartoonsubscriber;
+package pl.marczak.cartoonsubscriber.middle_tab;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,8 +9,9 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import pl.marczak.cartoonsubscriber.cartoononline.Cartoon;
-
+import pl.marczak.cartoonsubscriber.R;
+import pl.marczak.cartoonsubscriber.db.Cartoon;
+import pl.marczak.cartoonsubscriber.middle_tab.CartoonFragment.OnListFragmentInteractionListener;
 
 public class MyCartoonRecyclerViewAdapter extends RecyclerView.Adapter<MyCartoonRecyclerViewAdapter.ViewHolder> {
 
@@ -24,9 +25,9 @@ public class MyCartoonRecyclerViewAdapter extends RecyclerView.Adapter<MyCartoon
         notifyDataSetChanged();
     }
 
-    CartoonFragment.OnListFragmentInteractionListener mListener;
+    OnListFragmentInteractionListener mListener;
 
-    public MyCartoonRecyclerViewAdapter(CartoonFragment.OnListFragmentInteractionListener listener) {
+    public MyCartoonRecyclerViewAdapter(OnListFragmentInteractionListener listener) {
         mListener = listener;
     }
 
@@ -40,11 +41,11 @@ public class MyCartoonRecyclerViewAdapter extends RecyclerView.Adapter<MyCartoon
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final Cartoon cartoon = mValues.get(position);
-        holder.mIdView.setText(cartoon.name);
+        holder.mIdView.setText(cartoon.title);
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (null != mListener) { 
+                if (null != mListener) {
                     mListener.onItemSelected(cartoon.url);
                 }
             }
@@ -59,13 +60,12 @@ public class MyCartoonRecyclerViewAdapter extends RecyclerView.Adapter<MyCartoon
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mIdView;
-       // public final TextView mContentView;
+        // public final TextView mContentView;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
             mIdView = (TextView) view.findViewById(R.id.text);
-//            mContentView = (TextView) view.findViewById(R.id.content);
         }
 
         @Override

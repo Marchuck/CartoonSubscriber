@@ -1,4 +1,4 @@
-package pl.marczak.cartoonsubscriber;
+package pl.marczak.cartoonsubscriber.net;
 
 import android.support.annotation.Nullable;
 import android.util.Log;

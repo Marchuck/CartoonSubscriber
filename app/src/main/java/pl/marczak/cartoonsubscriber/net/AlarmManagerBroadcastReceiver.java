@@ -1,4 +1,4 @@
-package pl.marczak.cartoonsubscriber;
+package pl.marczak.cartoonsubscriber.net;
 
 import android.app.AlarmManager;
 import android.app.NotificationManager;
@@ -14,6 +14,9 @@ import android.widget.Toast;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import pl.marczak.cartoonsubscriber.R;
+import pl.marczak.cartoonsubscriber.RecentEpisodeActivity;
+import pl.marczak.cartoonsubscriber.di.App;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -69,7 +72,7 @@ public class AlarmManagerBroadcastReceiver extends BroadcastReceiver {
         return path;
     }
 
-    public void SetAlarm(Context context) {
+    public void setAlarm(Context context) {
         Log.d(TAG, "SetAlarm: ");
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, AlarmManagerBroadcastReceiver.class);
@@ -81,7 +84,7 @@ public class AlarmManagerBroadcastReceiver extends BroadcastReceiver {
         am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), TWELVE_HOURS, pi);
     }
 
-    public void CancelAlarm(Context context) {
+    public void cancelAlarm(Context context) {
         Log.d(TAG, "CancelAlarm: ");
         Intent intent = new Intent(context, AlarmManagerBroadcastReceiver.class);
         PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent, 0);
