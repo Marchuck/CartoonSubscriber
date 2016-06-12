@@ -68,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
         if (drawerLayout == null) {
             drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         }
-        drawerLayout.setDrawerElevation(15);
         toggle = new ActionBarDrawerToggle(this, drawerLayout, android.R.string.ok,
                 android.R.string.cancel) {
             @Override

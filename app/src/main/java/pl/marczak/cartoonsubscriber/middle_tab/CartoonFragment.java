@@ -1,6 +1,5 @@
 package pl.marczak.cartoonsubscriber.middle_tab;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -109,33 +108,7 @@ public class CartoonFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-//        txtChangeListener = new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//                if (!newText.isEmpty()) {
-//                    String firstChar = String.valueOf(newText.charAt(0));
-//                    if (Pattern.matches("[a-zA-Z]", firstChar)) {
-//                        Log.d(TAG, "onQueryTextChange: " + newText);
-//                    }
-//                }
-//                return false;
-//            }
-//        };
-        mListener = new OnListFragmentInteractionListener() {
-            @Override
-            public void onItemSelected(String url) {
-                Log.d(TAG, "onItemSelected: " + url);
-            }
-        };
-    }
+
 
     @Override
     public void onDetach() {

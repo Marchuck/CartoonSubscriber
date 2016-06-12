@@ -1,6 +1,5 @@
 package pl.marczak.cartoonsubscriber.right_tab;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -67,14 +66,9 @@ public class RightNavigatorFragment extends Fragment implements LoaderManager.Lo
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         cartoonAdapter = new CartoonAdapter();
         recyclerView.setAdapter(cartoonAdapter);
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
     }
 
     @Override
@@ -85,7 +79,7 @@ public class RightNavigatorFragment extends Fragment implements LoaderManager.Lo
     @Override
     public Loader<List<Cartoon>> onCreateLoader(int id, Bundle args) {
         Log.d(TAG, "onCreateLoader: ");
-        CartoonsLoader loader = new CartoonsLoader(this.getContext());
+        CartoonsLoader loader = new CartoonsLoader(this.getActivity());
         return loader;
     }
 
