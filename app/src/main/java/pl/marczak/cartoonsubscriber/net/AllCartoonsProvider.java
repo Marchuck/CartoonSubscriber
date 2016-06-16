@@ -25,7 +25,6 @@ public class AllCartoonsProvider {
     public static rx.Observable<List<Cartoon>> fetchCartoons(@Nullable final DBSaver<Cartoon> saver) {
         return JsoupProxy.getJsoupDocument(url).map(new Func1<Document, List<Cartoon>>() {
             private boolean canReadFurher;
-
             @Override
             public List<Cartoon> call(Document document) {
                 List<Cartoon> cartoons = new ArrayList<>();

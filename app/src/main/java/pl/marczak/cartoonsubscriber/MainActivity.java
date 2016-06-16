@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import pl.marczak.cartoonsubscriber.left_tab.LeftNavigatorFragment;
+import pl.marczak.cartoonsubscriber.left_tab.CurrentAnimeFragment;
 import pl.marczak.cartoonsubscriber.middle_tab.CartoonFragment;
 import pl.marczak.cartoonsubscriber.right_tab.RightNavigatorFragment;
 import pl.marczak.cartoonsubscriber.utils.Const;
@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
             query = intent.getStringExtra(SearchManager.QUERY);
         }
         setFragmentForPlaceholder(Const.MIDDLE, CartoonFragment.newInstance());
-        setFragmentForPlaceholder(Const.LEFT, LeftNavigatorFragment.newInstance());
+        setFragmentForPlaceholder(Const.LEFT, CurrentAnimeFragment.newInstance());
         setFragmentForPlaceholder(Const.RIGHT, RightNavigatorFragment.newInstance(query));
         if (query != null) drawerLayout.openDrawer(Gravity.RIGHT);
     }
