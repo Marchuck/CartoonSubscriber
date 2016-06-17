@@ -1,6 +1,7 @@
 package pl.marczak.cartoonsubscriber.db;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,9 +23,9 @@ public class EpisodesAdapter extends RecyclerView.Adapter<EpisodesAdapter.VH> {
     public static final String TAG = EpisodesAdapter.class.getSimpleName();
     List<Episode> dataSet;
     private CurrentAnimeFragment.Callbacks callbacks;
-
+    private int recentSelection = -1;
     public EpisodesAdapter() {
-        this(new ArrayList<Episode>());
+        this(new ArrayList<>());
     }
 
     public EpisodesAdapter(List<Episode> dataSet) {
@@ -48,18 +49,19 @@ public class EpisodesAdapter extends RecyclerView.Adapter<EpisodesAdapter.VH> {
     @Override
     public void onBindViewHolder(final VH holder, int position) {
         final Episode episode = dataSet.get(position);
+       holder.textView.setTextColor(recentSelection==position? Color.RED:Color.BLACK);
         holder.textView.setText(episode.title);
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Context ctx = holder.itemView.getContext();
+        holder.itemView.setOnClickListener(v -> {
+            recentSelection = position;
+            notifyDataSetChanged();
+            Context ctx = holder.itemView.getContext();
+
 //                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(item.url));
-                //   Intent intent = new Intent(ctx, MoreNewsActivity.class);
-                ///    intent.putExtra("URL", item.url);
-                //    ctx.startActivity(intent);
-                if (callbacks != null) callbacks.onEpisodeSelected(episode);
-            }
+            //   Intent intent = new Intent(ctx, MoreNewsActivity.class);
+            ///    intent.putExtra("URL", item.url);
+            //    ctx.startActivity(intent);
+            if (callbacks != null) callbacks.onEpisodeSelected(episode);
         });
     }
 

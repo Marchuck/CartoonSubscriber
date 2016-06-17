@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -29,7 +30,7 @@ public class CartoonFragment extends Fragment {
 //    SearchView searchView;
 
     @BindView(R.id.image)
-    GifImageView imageView;
+    ImageView imageView;
     /**
      * HELPERS & LISTENERS & CALLBACKS
      */
@@ -56,15 +57,16 @@ public class CartoonFragment extends Fragment {
         View view = inflater.inflate(R.layout.center_splash, container, false);
         Log.d(TAG, "onCreateView: ");
         ButterKnife.bind(this, view);
-        InputStream sourceIs = getResources().openRawResource(R.raw.logo);
-        BufferedInputStream bis = null;
-        try {
-            bis = new BufferedInputStream(sourceIs, sourceIs.available());
-            gifFromStream = new GifDrawable(bis);
-            gifFromStream.start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//
+// InputStream sourceIs = getResources().openRawResource(R.raw.logo);
+//        BufferedInputStream bis = null;
+//        try {
+//            bis = new BufferedInputStream(sourceIs, sourceIs.available());
+//            gifFromStream = new GifDrawable(bis);
+//            gifFromStream.start();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
 
         // Set the adapter

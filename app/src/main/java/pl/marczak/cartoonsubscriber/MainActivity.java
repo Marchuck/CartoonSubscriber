@@ -2,6 +2,7 @@ package pl.marczak.cartoonsubscriber;
 
 import android.app.SearchManager;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -118,5 +119,7 @@ public class MainActivity extends AppCompatActivity implements RightNavigatorFra
     @Override
     public void onEpisodeSelected(Episode episode) {
         Log.d(TAG, "onEpisodeSelected: ");
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(episode.url));
+        startActivity(browserIntent);
     }
 }
