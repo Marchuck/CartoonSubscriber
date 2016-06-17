@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -36,13 +35,10 @@ public class SuggestionEngine<T extends Stringable> {
     }
 
     public void init() {
-        CartoonSuggestionsEngine.emitInputs(searchView).map(new Func1<String, List<T>>() {
-            @Override
-            public List<T> call(String s) {
-                List<T> out = new ArrayList<>();
-                for (T t : data) if (t.containsSubstring(s.toLowerCase())) out.add(t);
-                return out;
-            }
+        CartoonSuggestionsEngine.emitInputs(searchView).map(s -> {
+            List<T> out = new ArrayList<>();
+            for (T t : data) if (t.containsSubstring(s.toLowerCase())) out.add(t);
+            return out;
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new VerboseSubscriber<List<T>>(TAG) {
                     @Override

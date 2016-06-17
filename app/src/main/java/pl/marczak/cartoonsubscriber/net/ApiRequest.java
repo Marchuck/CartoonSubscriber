@@ -85,66 +85,60 @@ public class ApiRequest {
         final List<String> emptyList = new ArrayList<>();
         emptyList.add("");
         emptyList.add("");
-        return JsoupProxy.getJsoupDocument(url1).map(new Func1<Document, List<String>>() {
-            @Override
-            public List<String> call(Document document) {
-                Log.d(TAG, "calling document: " + (document == null));
-                if (document == null) {
-                    return emptyList;
-                }
-                Log.i(TAG, "received document " + document.title());
-                Elements newest = document.getElementsByClass("menustyle");
-                if (newest == null || newest.size() == 0) return emptyList;
-                Element element = newest.get(1);
-                String[] regularElems = element.text().split("Regular Show");
-                List<String> lst = new ArrayList<>();
-                for (int j = 1; j < regularElems.length; j++)
-                    lst.add(regularElems[j].trim());
-                for (String s : lst) Log.i(TAG, "call: [" + s + "]");
-                return Arrays.asList(regularElems);
+        return JsoupProxy.getJsoupDocument(url1).map(document -> {
+            Log.d(TAG, "calling document: " + (document == null));
+            if (document == null) {
+                return emptyList;
             }
+            Log.i(TAG, "received document " + document.title());
+            Elements newest = document.getElementsByClass("menustyle");
+            if (newest == null || newest.size() == 0) return emptyList;
+            Element element = newest.get(1);
+            String[] regularElems = element.text().split("Regular Show");
+            List<String> lst = new ArrayList<>();
+            for (int j = 1; j < regularElems.length; j++)
+                lst.add(regularElems[j].trim());
+            for (String s : lst) Log.i(TAG, "call: [" + s + "]");
+            return Arrays.asList(regularElems);
         });
     }
 
     public rx.Observable<CartoonEntity> getEpisodesWithData(String url) {
         Log.i(TAG, "getEpisodesWithData: " + url);
-        return JsoupProxy.getJsoupDocument(url).map(new Func1<Document, CartoonEntity>() {
-            @Override
-            public CartoonEntity call(Document document) {
-                Log.d(TAG, "calling document: " + (document == null));
-                if (document == null) {
-                    throw new NullPointerException("Nullable document");
-                }
-                CartoonEntity entity = new CartoonEntity();
-
-                Log.i(TAG, "received document " + document.title());
-                List<Episode> episodes = new ArrayList<>();
-
-                Elements elements = document.getElementsByClass("sonra");
-                if (Is.nullable(elements)) Log.w(TAG, "episodes are empty: ");
-                    // throw new NullPointerException("Nullable episodes");
-                else {
-                    for (Element e : elements) {
-                        String url = e.attr("href");
-                        String title = e.attr("title");
-                        Log.d(TAG, "call: " + url + "," + title);
-                        episodes.add(new Episode(title, url));
-                    }
-                }
-
-                Log.d(TAG, "call: 1");
-                entity.episodes = episodes;
-                Elements titles = document.getElementsByClass("iltext");
-                Element image = document.getElementById("cat-img-desc");
-                Log.d(TAG, "call: 2");
-                if (titles.isEmpty())
-                    entity.about = "";
-                else
-                    entity.about = titles.get(0).text();
-                Log.d(TAG, "call: 3");
-                entity.imageUrl = imgUrlExtract(image);
-                return entity;
+        return JsoupProxy.getJsoupDocument(url).map(document -> {
+            Log.d(TAG, "calling document: " + (document == null));
+            if (document == null) {
+                throw new NullPointerException("Nullable document");
             }
+            CartoonEntity entity = new CartoonEntity();
+
+            Log.i(TAG, "received document " + document.title());
+            List<Episode> episodes = new ArrayList<>();
+
+            Elements elements = document.getElementsByClass("sonra");
+            if (Is.nullable(elements)) Log.w(TAG, "episodes are empty: ");
+                // throw new NullPointerException("Nullable episodes");
+            else {
+                for (Element e : elements) {
+                    String url1 = e.attr("href");
+                    String title = e.attr("title");
+                    Log.d(TAG, "call: " + url1 + "," + title);
+                    episodes.add(new Episode(title, url1));
+                }
+            }
+
+            Log.d(TAG, "call: 1");
+            entity.episodes = episodes;
+            Elements titles = document.getElementsByClass("iltext");
+            Element image = document.getElementById("cat-img-desc");
+            Log.d(TAG, "call: 2");
+            if (titles.isEmpty())
+                entity.about = "";
+            else
+                entity.about = titles.get(0).text();
+            Log.d(TAG, "call: 3");
+            entity.imageUrl = imgUrlExtract(image);
+            return entity;
         });
     }
 
