@@ -7,9 +7,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
-
 import rx.Observable;
+import rx.Subscriber;
 
 /**
  * @author Lukasz Marczak
@@ -18,15 +17,20 @@ import rx.Observable;
 public class JsoupProxy {
 
     public static rx.Observable<Document> getJsoupDocument(final String url) {
-        return Observable.create((Observable.OnSubscribe<Document>) subscriber -> {
-            Document document = null;
-            try {
-                document = Jsoup.connect(url).get();
-            } catch (IOException ignored) {
-                Log.e("JsoupProxy", "getDocument: " + ignored.getMessage());
+        return Observable.create(new Observable.OnSubscribe<Document>() {
+            @Override
+            public void call(Subscriber<? super Document> subscriber) {
+                Document document = null;
+                try {
+                    Log.d("JsoupProxy", "calling url = " + url);
+                    document = Jsoup.connect(url).get();
+                } catch (Exception ignored) {
+                    Log.e("JsoupProxy", "getDocument: " + ignored.getMessage());
+                    subscriber.onError(ignored);
+                }
+                subscriber.onNext(document);
+                subscriber.onCompleted();
             }
-            subscriber.onNext(document);
-            subscriber.onCompleted();
         });
     }
 

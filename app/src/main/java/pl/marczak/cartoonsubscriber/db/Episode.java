@@ -7,6 +7,17 @@ package pl.marczak.cartoonsubscriber.db;
 public class Episode {
     public String title;
     public String url;
-    public String date;
 
+    public Episode(String title, String url) {
+        this.title = title;
+        this.url = url;
+    }
+
+    public Episode() {
+    }
+
+    @Override
+    public String toString() {
+        return title;
+    }
 }

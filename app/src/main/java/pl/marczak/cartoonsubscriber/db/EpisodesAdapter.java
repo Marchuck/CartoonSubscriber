@@ -1,5 +1,6 @@
 package pl.marczak.cartoonsubscriber.db;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,30 +12,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pl.marczak.cartoonsubscriber.R;
-import pl.marczak.cartoonsubscriber.right_tab.RightNavigatorFragment;
+import pl.marczak.cartoonsubscriber.left_tab.CurrentAnimeFragment;
 
 /**
  * @author Lukasz Marczak
  * @since 12.06.16.
  */
-public class CartoonAdapter extends RecyclerView.Adapter<CartoonAdapter.VH> {
-    public static final String TAG = CartoonAdapter.class.getSimpleName();
-    List<Cartoon> dataSet;
-    private RightNavigatorFragment.Callbacks callbacks;
+public class EpisodesAdapter extends RecyclerView.Adapter<EpisodesAdapter.VH> {
+    public static final String TAG = EpisodesAdapter.class.getSimpleName();
+    List<Episode> dataSet;
+    private CurrentAnimeFragment.Callbacks callbacks;
 
-    public CartoonAdapter() {
-        this(new ArrayList<Cartoon>());
+    public EpisodesAdapter() {
+        this(new ArrayList<Episode>());
     }
 
-    public CartoonAdapter(List<Cartoon> dataSet) {
+    public EpisodesAdapter(List<Episode> dataSet) {
         this.dataSet = dataSet;
     }
 
-    public void setDataSet(List<Cartoon> cartoons) {
+    public void refreshDataSet(List<Episode> cartoons) {
         dataSet = cartoons;
         notifyItemRangeChanged(0, getItemCount());
         notifyDataSetChanged();
         Log.d(TAG, "refreshDataSet: ");
+
     }
 
     @Override
@@ -45,20 +47,18 @@ public class CartoonAdapter extends RecyclerView.Adapter<CartoonAdapter.VH> {
 
     @Override
     public void onBindViewHolder(final VH holder, int position) {
-        final Cartoon cartoon = dataSet.get(position);
-        holder.textView.setText(cartoon.title);
+        final Episode episode = dataSet.get(position);
+        holder.textView.setText(episode.title);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick: " + cartoon);
-                //Context ctx = holder.itemView.getContext();
+                Context ctx = holder.itemView.getContext();
 //                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(item.url));
                 //   Intent intent = new Intent(ctx, MoreNewsActivity.class);
                 ///    intent.putExtra("URL", item.url);
                 //    ctx.startActivity(intent);
-                if (callbacks != null) callbacks.onRightItemSelected(cartoon);
-                Log.d(TAG, "onClick: " + cartoon);
+                if (callbacks != null) callbacks.onEpisodeSelected(episode);
             }
         });
     }
@@ -68,13 +68,8 @@ public class CartoonAdapter extends RecyclerView.Adapter<CartoonAdapter.VH> {
         return dataSet == null ? 0 : dataSet.size();
     }
 
-    public void connectClickListener(RightNavigatorFragment.Callbacks callbacks) {
-        Log.i(TAG, "connectClickListener: ");
+    public void connectClickListener(CurrentAnimeFragment.Callbacks callbacks) {
         this.callbacks = callbacks;
-    }
-
-    public List<Cartoon> getData() {
-        return dataSet;
     }
 
     public static class VH extends RecyclerView.ViewHolder {
@@ -83,7 +78,6 @@ public class CartoonAdapter extends RecyclerView.Adapter<CartoonAdapter.VH> {
 
         public VH(View v) {
             super(v);
-            itemView.setClickable(true);
             textView = (TextView) v.findViewById(R.id.text);
             date = (TextView) v.findViewById(R.id.date);
         }

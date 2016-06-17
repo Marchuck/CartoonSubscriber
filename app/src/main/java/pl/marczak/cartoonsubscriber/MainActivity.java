@@ -3,7 +3,6 @@ package pl.marczak.cartoonsubscriber;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -18,20 +17,20 @@ import java.util.concurrent.TimeUnit;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import pl.marczak.cartoonsubscriber.db.Cartoon;
+import pl.marczak.cartoonsubscriber.db.Episode;
 import pl.marczak.cartoonsubscriber.left_tab.CurrentAnimeFragment;
 import pl.marczak.cartoonsubscriber.middle_tab.CartoonFragment;
 import pl.marczak.cartoonsubscriber.right_tab.RightNavigatorFragment;
 import pl.marczak.cartoonsubscriber.utils.Const;
 import pl.marczak.cartoonsubscriber.utils.DrawerMode;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements RightNavigatorFragment.Callbacks,
+        CurrentAnimeFragment.Callbacks {
     public static final String TAG = MainActivity.class.getSimpleName();
     /**
      * VIEWS
      */
-    @BindView(R.id.fab)
-    FloatingActionButton fab;
-
     @BindView(R.id.drawer_layout)
     android.support.v4.widget.DrawerLayout drawerLayout;
 
@@ -58,13 +57,12 @@ public class MainActivity extends AppCompatActivity {
             query = intent.getStringExtra(SearchManager.QUERY);
         }
         setFragmentForPlaceholder(Const.MIDDLE, CartoonFragment.newInstance());
-        setFragmentForPlaceholder(Const.LEFT, CurrentAnimeFragment.newInstance());
+        setFragmentForPlaceholder(Const.LEFT, CurrentAnimeFragment.newInstance(null));
         setFragmentForPlaceholder(Const.RIGHT, RightNavigatorFragment.newInstance(query));
         if (query != null) drawerLayout.openDrawer(Gravity.RIGHT);
     }
 
     private void setupViews() {
-
         if (drawerLayout == null) {
             drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         }
@@ -106,5 +104,19 @@ public class MainActivity extends AppCompatActivity {
         fabListener = null;
         toggle = null;
         super.onDestroy();
+    }
+
+    @Override
+    public void onRightItemSelected(Cartoon cartoon) {
+        Log.d(TAG, "onRightItemSelected: " + cartoon);
+        drawerLayout.closeDrawer(Gravity.RIGHT);
+        CurrentAnimeFragment fragment = CurrentAnimeFragment.newInstance(cartoon);
+        setFragmentForPlaceholder(Const.LEFT, fragment);
+        drawerLayout.openDrawer(Gravity.LEFT);
+    }
+
+    @Override
+    public void onEpisodeSelected(Episode episode) {
+        Log.d(TAG, "onEpisodeSelected: ");
     }
 }

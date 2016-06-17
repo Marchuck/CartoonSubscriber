@@ -11,6 +11,8 @@ import pl.marczak.cartoonsubscriber.db.Cartoon;
 import pl.marczak.cartoonsubscriber.db.CartoonDbHelper;
 import pl.marczak.cartoonsubscriber.di.App;
 import rx.Observable;
+import rx.Subscriber;
+import rx.functions.Func1;
 
 /**
  * @author Lukasz Marczak
@@ -24,52 +26,94 @@ public class CartoonSuggestionsEngine {
         initDBHelper(context);
     }
 
+    public static rx.Observable<String> emitInputs(final SearchView searchView) {
+        Log.d(TAG, "emitInputs: ");
+        return Observable.create(new Observable.OnSubscribe<String>() {
+            @Override
+            public void call(final Subscriber<? super String> subscriber) {
+                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextSubmit(String query) {
+                        Log.d(TAG, "onQueryTextSubmit: " + query);
+                        subscriber.onNext(query);
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onQueryTextChange(String newText) {
+                        if (!newText.isEmpty()) subscriber.onNext(newText);
+                        return false;
+                    }
+                });
+            }
+        });
+//        return Observable.create((Observable.OnSubscribe<String>) subscriber -> {
+//            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//                @Override
+//                public boolean onQueryTextSubmit(String query) {
+//                    Log.d(TAG, "onQueryTextSubmit: " + query);
+//                    subscriber.onNext(query);
+//                    return false;
+//                }
+//
+//                @Override
+//                public boolean onQueryTextChange(String newText) {
+//                    return false;
+//                }
+//            });
+//        });
+    }
+
     private void initDBHelper(Context context) {
         Log.d(TAG, "initDBHelper: ");
         dbHelper = new CartoonDbHelper(context);
     }
 
-    public rx.Observable<String> emitInputs(final SearchView searchView) {
-        Log.d(TAG, "emitInputs: ");
-        return Observable.create((Observable.OnSubscribe<String>) subscriber -> {
-            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                @Override
-                public boolean onQueryTextSubmit(String query) {
-                    Log.d(TAG, "onQueryTextSubmit: " + query);
-                    subscriber.onNext(query);
-                    return false;
-                }
-
-                @Override
-                public boolean onQueryTextChange(String newText) {
-                    return false;
-                }
-            });
-        });
-    }
-
     public rx.Observable<List<Cartoon>> getCartoons(final Context c, final SearchView searchView) {
-
-        return emitInputs(searchView).map(s -> {
-            Log.i(TAG, "query: " + s);
-            List<Cartoon> cartoons = dbHelper.getCartoons(App.getInstance(c.getApplicationContext()).readableDatabase, s);
-            return cartoons;
+        return emitInputs(searchView).map(new Func1<String, List<Cartoon>>() {
+            @Override
+            public List<Cartoon> call(String s) {
+                Log.i(TAG, "query: " + s);
+                List<Cartoon> cartoons = dbHelper.getCartoons(App.getInstance(c.getApplicationContext())
+                        .readableDatabase, s);
+                return cartoons;
+            }
         });
+//        return emitInputs(searchView).map(s -> {
+//            Log.i(TAG, "query: " + s);
+//            List<Cartoon> cartoons = dbHelper.getCartoons(App.getInstance(c.getApplicationContext())
+//                    .readableDatabase, s);
+//            return cartoons;
+//        });
     }
 
 
     public rx.Observable<List<Cartoon>> getCartoons(final SearchView searchView, final List<Cartoon> cartoons) {
-        return emitInputs(searchView).map(s -> {
-            Log.i("", "query: " + s);
+        return emitInputs(searchView).map(new Func1<String, List<Cartoon>>() {
+            @Override
+            public List<Cartoon> call(String s) {
+                Log.i("", "query: " + s);
 
-            List<Cartoon> cartoons_ = new ArrayList<>();
-            for (Cartoon c : cartoons) {
-                if (c.title.startsWith(s)) {
-                    cartoons_.add(c);
+                List<Cartoon> cartoons_ = new ArrayList<>();
+                for (Cartoon c : cartoons) {
+                    if (c.title.startsWith(s)) {
+                        cartoons_.add(c);
+                    }
                 }
+                return cartoons_;
             }
-            return cartoons_;
         });
+//        return emitInputs(searchView).map(s -> {
+//            Log.i("", "query: " + s);
+//
+//            List<Cartoon> cartoons_ = new ArrayList<>();
+//            for (Cartoon c : cartoons) {
+//                if (c.title.startsWith(s)) {
+//                    cartoons_.add(c);
+//                }
+//            }
+//            return cartoons_;
+//        });
     }
 
 }
