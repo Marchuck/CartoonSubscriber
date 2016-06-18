@@ -57,4 +57,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </ScrollView>
+    <include
+        android:id="@+id/error_layout"
+        tools:visibility="visible"
+        android:visibility="gone"
+        layout="@layout/error_layout"/>
 </RelativeLayout>

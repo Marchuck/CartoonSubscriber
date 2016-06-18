@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="@color/colorPrimaryDark"
+    android:background="@color/colorPrimary"
     android:layout_height="100sp"
     xmlns:tools="http://schemas.android.com/tools" >
 
     <TextView
-        android:textColor="@color/lightText"
+        android:textColor="@color/primaryText"
         android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -15,16 +15,6 @@
         android:padding="10sp"
         android:layout_centerVertical="true" />
 
-    <TextView
-        android:padding="10sp"
-        tools:text="AAAAA"
-        android:textColor="@color/lightText"
-        android:id="@+id/date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/text"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
     <View
         android:background="@color/colorAccent"
         android:layout_width="match_parent"

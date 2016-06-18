@@ -123,7 +123,6 @@ public class MainActivity extends AppCompatActivity implements RightNavigatorFra
     public void onRightItemSelected(Cartoon cartoon) {
         Log.d(TAG, "onRightItemSelected: " + cartoon);
         drawerLayout.closeDrawer(Gravity.RIGHT);
-        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         CurrentAnimeFragment left = CurrentAnimeFragment.newInstance(cartoon);
         CenterCartoonFragment middle = CenterCartoonFragment.newInstance(cartoon);
         setFragmentForPlaceholder(Const.LEFT, left);
@@ -136,7 +135,6 @@ public class MainActivity extends AppCompatActivity implements RightNavigatorFra
             @Override
             public void onNext(CartoonEntity entity) {
                 Log.d(TAG, "onNext: ");
-                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                 EventBus.getDefault().post(new CartoonMetaData(entity.about, entity.imageUrl, cartoon.title));
                 EventBus.getDefault().post(new CartoonEpisodes(entity.episodes));
                 drawerLayout.openDrawer(Gravity.LEFT);
@@ -145,6 +143,11 @@ public class MainActivity extends AppCompatActivity implements RightNavigatorFra
             @Override
             public void onError(Throwable e) {
                 super.onError(e);
+                runOnUiThread(() -> {
+                    EventBus.getDefault().post(new CartoonMetaData());
+                    EventBus.getDefault().post(new CartoonEpisodes());
+                    drawerLayout.openDrawer(Gravity.LEFT);
+                });
             }
         });
     }

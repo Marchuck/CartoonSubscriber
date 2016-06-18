@@ -32,15 +32,12 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.VH> {
     public void onBindViewHolder(final VH holder, int position) {
         final String item = dataSet.get(position);
         holder.textView.setText(item);
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Context ctx = holder.itemView.getContext();
+        holder.itemView.setOnClickListener(v -> {
+            Context ctx = holder.itemView.getContext();
 //                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(item.url));
-                //   Intent intent = new Intent(ctx, MoreNewsActivity.class);
-                ///    intent.putExtra("URL", item.url);
-                //    ctx.startActivity(intent);
-            }
+            //   Intent intent = new Intent(ctx, MoreNewsActivity.class);
+            ///    intent.putExtra("URL", item.url);
+            //    ctx.startActivity(intent);
         });
     }
 
@@ -56,7 +53,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.VH> {
         public VH(View v) {
             super(v);
             textView = (TextView) v.findViewById(R.id.text);
-            date = (TextView) v.findViewById(R.id.date);
+     //       date = (TextView) v.findViewById(R.id.date);
         }
     }
 }

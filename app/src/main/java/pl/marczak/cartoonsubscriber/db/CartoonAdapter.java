@@ -23,7 +23,7 @@ public class CartoonAdapter extends RecyclerView.Adapter<CartoonAdapter.VH> {
     private RightNavigatorFragment.Callbacks callbacks;
 
     public CartoonAdapter() {
-        this(new ArrayList<Cartoon>());
+        this(new ArrayList<>());
     }
 
     public CartoonAdapter(List<Cartoon> dataSet) {
@@ -48,18 +48,8 @@ public class CartoonAdapter extends RecyclerView.Adapter<CartoonAdapter.VH> {
         final Cartoon cartoon = dataSet.get(position);
         holder.textView.setText(cartoon.title);
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "onClick: " + cartoon);
-                //Context ctx = holder.itemView.getContext();
-//                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(item.url));
-                //   Intent intent = new Intent(ctx, MoreNewsActivity.class);
-                ///    intent.putExtra("URL", item.url);
-                //    ctx.startActivity(intent);
-                if (callbacks != null) callbacks.onRightItemSelected(cartoon);
-                Log.d(TAG, "onClick: " + cartoon);
-            }
+        holder.itemView.setOnClickListener(v -> {
+            if (callbacks != null) callbacks.onRightItemSelected(cartoon);
         });
     }
 
@@ -69,7 +59,6 @@ public class CartoonAdapter extends RecyclerView.Adapter<CartoonAdapter.VH> {
     }
 
     public void connectClickListener(RightNavigatorFragment.Callbacks callbacks) {
-        Log.i(TAG, "connectClickListener: ");
         this.callbacks = callbacks;
     }
 
@@ -79,13 +68,11 @@ public class CartoonAdapter extends RecyclerView.Adapter<CartoonAdapter.VH> {
 
     public static class VH extends RecyclerView.ViewHolder {
         TextView textView;
-        TextView date;
 
         public VH(View v) {
             super(v);
             itemView.setClickable(true);
             textView = (TextView) v.findViewById(R.id.text);
-            date = (TextView) v.findViewById(R.id.date);
         }
     }
 }

@@ -9,10 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.RelativeLayout;
 
-import com.squareup.picasso.Picasso;
 import com.tt.whorlviewlibrary.WhorlView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -24,17 +22,15 @@ import pl.marczak.cartoonsubscriber.R;
 import pl.marczak.cartoonsubscriber.db.Cartoon;
 import pl.marczak.cartoonsubscriber.db.Episode;
 import pl.marczak.cartoonsubscriber.db.EpisodesAdapter;
-import pl.marczak.cartoonsubscriber.model.CartoonEntity;
 import pl.marczak.cartoonsubscriber.model.CartoonEpisodes;
-import pl.marczak.cartoonsubscriber.net.ApiRequest;
-import pl.marczak.cartoonsubscriber.utils.VerboseSubscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 
 public class CurrentAnimeFragment extends Fragment {
     public static final String TAG = CurrentAnimeFragment.class.getSimpleName();
     Callbacks callbacks;
+
+    @BindView(R.id.error_layout)
+    RelativeLayout error_layout;
 
     @BindView(R.id.anime_recycler_view)
     RecyclerView cartoonsRecyclerView;
@@ -100,7 +96,11 @@ public class CurrentAnimeFragment extends Fragment {
         Log.d(TAG, "onEvent: ");
         progressIndicator.stop();
         progressIndicator.setVisibility(View.GONE);
-        adapter.refreshDataSet(episodes.episodes);
+        if (episodes.episodes == null) {
+            error_layout.setVisibility(View.VISIBLE);
+        } else {
+            adapter.refreshDataSet(episodes.episodes);
+        }
     }
 
     @Override

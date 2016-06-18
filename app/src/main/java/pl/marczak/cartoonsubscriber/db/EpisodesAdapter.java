@@ -1,6 +1,5 @@
 package pl.marczak.cartoonsubscriber.db;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -24,6 +23,7 @@ public class EpisodesAdapter extends RecyclerView.Adapter<EpisodesAdapter.VH> {
     List<Episode> dataSet;
     private CurrentAnimeFragment.Callbacks callbacks;
     private int recentSelection = -1;
+
     public EpisodesAdapter() {
         this(new ArrayList<>());
     }
@@ -37,7 +37,6 @@ public class EpisodesAdapter extends RecyclerView.Adapter<EpisodesAdapter.VH> {
         notifyItemRangeChanged(0, getItemCount());
         notifyDataSetChanged();
         Log.d(TAG, "refreshDataSet: ");
-
     }
 
     @Override
@@ -49,18 +48,12 @@ public class EpisodesAdapter extends RecyclerView.Adapter<EpisodesAdapter.VH> {
     @Override
     public void onBindViewHolder(final VH holder, int position) {
         final Episode episode = dataSet.get(position);
-       holder.textView.setTextColor(recentSelection==position? Color.RED:Color.BLACK);
+        holder.textView.setTextColor(recentSelection == position ? Color.RED : Color.BLACK);
         holder.textView.setText(episode.title);
 
         holder.itemView.setOnClickListener(v -> {
             recentSelection = position;
             notifyDataSetChanged();
-            Context ctx = holder.itemView.getContext();
-
-//                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(item.url));
-            //   Intent intent = new Intent(ctx, MoreNewsActivity.class);
-            ///    intent.putExtra("URL", item.url);
-            //    ctx.startActivity(intent);
             if (callbacks != null) callbacks.onEpisodeSelected(episode);
         });
     }
@@ -76,12 +69,10 @@ public class EpisodesAdapter extends RecyclerView.Adapter<EpisodesAdapter.VH> {
 
     public static class VH extends RecyclerView.ViewHolder {
         TextView textView;
-        TextView date;
 
         public VH(View v) {
             super(v);
             textView = (TextView) v.findViewById(R.id.text);
-            date = (TextView) v.findViewById(R.id.date);
         }
     }
 }

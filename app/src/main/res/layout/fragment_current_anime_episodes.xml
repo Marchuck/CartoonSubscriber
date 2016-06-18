@@ -2,27 +2,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
     tools:context=".right_tab.SubscribedAnimesFragment">
 
     <TextView
         android:id="@+id/anime_title"
-        android:text="EPISODES"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:text="EPISODES" />
+
     <com.tt.whorlviewlibrary.WhorlView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/progress_indicator"
-        android:visibility="visible"
-        android:layout_centerInParent="true"
         android:layout_width="1dp"
         android:layout_height="1dp"
+        android:layout_centerInParent="true"
         android:layout_marginTop="12dp"
+        android:visibility="visible"
         app:whorlview_circle_colors="#F14336_#ffffff_#5677fc_#F44336_#4CAF50"
         app:whorlview_circle_speed="270"
         app:whorlview_parallax="fast"
         app:whorlview_strokeWidth="6"
-        app:whorlview_sweepAngle="90">
-    </com.tt.whorlviewlibrary.WhorlView>
+        app:whorlview_sweepAngle="90"></com.tt.whorlviewlibrary.WhorlView>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/anime_recycler_view"
@@ -30,5 +31,10 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/anime_title"
         android:visibility="visible" />
+    <include
+        android:id="@+id/error_layout"
+        tools:visibility="visible"
+        android:visibility="gone"
+        layout="@layout/error_layout"/>
 
 </RelativeLayout>

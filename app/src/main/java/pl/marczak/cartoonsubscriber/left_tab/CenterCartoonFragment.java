@@ -3,17 +3,14 @@ package pl.marczak.cartoonsubscriber.left_tab;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
 import com.tt.whorlviewlibrary.WhorlView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -21,15 +18,9 @@ import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import pl.droidsonroids.gif.GifDrawable;
-import pl.droidsonroids.gif.GifImageView;
 import pl.marczak.cartoonsubscriber.R;
 import pl.marczak.cartoonsubscriber.db.Cartoon;
-import pl.marczak.cartoonsubscriber.db.Episode;
-import pl.marczak.cartoonsubscriber.db.EpisodesAdapter;
-import pl.marczak.cartoonsubscriber.model.CartoonEntity;
 import pl.marczak.cartoonsubscriber.model.CartoonMetaData;
-import pl.marczak.cartoonsubscriber.net.ApiRequest;
 import pl.marczak.cartoonsubscriber.utils.GiphyProvider;
 import pl.marczak.cartoonsubscriber.utils.Is;
 import pl.marczak.cartoonsubscriber.utils.VerboseSubscriber;
@@ -40,6 +31,10 @@ import rx.schedulers.Schedulers;
 public class CenterCartoonFragment extends Fragment {
     public static final String TAG = CenterCartoonFragment.class.getSimpleName();
     rx.Subscription subscription;
+
+
+    @BindView(R.id.error_layout)
+    RelativeLayout error_layout;
     @BindView(R.id.anime_image_webview)
     WebView cartoonImageView;
     @BindView(R.id.anime_subtitle)
@@ -108,24 +103,28 @@ public class CenterCartoonFragment extends Fragment {
     @Subscribe
     public void onEvent(CartoonMetaData event) {
         Log.d(TAG, "onEvent: CartoonMetaData");
-        titleTextView.setText(event.title);
-        aboutTextView.setText(event.about);
-//
-//        String preparedGifUrl = "http://api.giphy.com/v1/gifs/search?q=" +
-//                event.title.trim().replaceAll(" ", "+") + "&api_key=dc6zaTOxFJmzC";
-        subscription = GiphyProvider.get(event.title).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new VerboseSubscriber<String>(TAG) {
-                    @Override
-                    public void onNext(String url) {
-                        Log.d(TAG, "onNext: GifDrawable");
-                        progressIndicator.stop();
-                        progressIndicator.setVisibility(View.GONE);
-                        cartoonImageView.setVisibility(View.VISIBLE);
-                        cartoonImageView.loadUrl(url);
-
-                    }
-                });
+        if (event.title == null || event.about == null) {
+            titleTextView.setVisibility(View.GONE);
+            aboutTextView.setVisibility(View.GONE);
+            progressIndicator.stop();
+            progressIndicator.setVisibility(View.GONE);
+            cartoonImageView.setVisibility(View.GONE);
+            error_layout.setVisibility(View.VISIBLE);
+        } else {
+            titleTextView.setText(event.title);
+            aboutTextView.setText(event.about);
+            subscription = GiphyProvider.get(event.title).subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new VerboseSubscriber<String>(TAG) {
+                        @Override
+                        public void onNext(String url) {
+                            Log.d(TAG, "onNext: GifDrawable");
+                            progressIndicator.stop();
+                            progressIndicator.setVisibility(View.GONE);
+                            cartoonImageView.setVisibility(View.VISIBLE);
+                            cartoonImageView.loadUrl(url);
+                        }
+                    });
+        }
     }
-
 }

@@ -88,12 +88,9 @@ public class RightNavigatorFragment extends Fragment {
                         cartoonAdapter.setDataSet(fullData);
                         recyclerView.setVisibility(View.VISIBLE);
                         SuggestionEngine<Cartoon> engine = new SuggestionEngine<>(searchView, fullData);
-                        engine.afterSuggest(new SuggestionEngine.ResultCallback<Cartoon>() {
-                            @Override
-                            public void onSuggested(List<Cartoon> suggestions) {
-                                Log.d(TAG, "onSuggested: " + suggestions.size());
-                                cartoonAdapter.setDataSet(suggestions);
-                            }
+                        engine.afterSuggest(suggestions -> {
+                            Log.d(TAG, "onSuggested: " + suggestions.size());
+                            cartoonAdapter.setDataSet(suggestions);
                         }).init();
                     }
                 });
