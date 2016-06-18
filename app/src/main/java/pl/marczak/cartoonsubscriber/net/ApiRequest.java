@@ -1,9 +1,9 @@
 package pl.marczak.cartoonsubscriber.net;
 
+import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
@@ -11,11 +11,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import io.realm.Realm;
+import io.realm.RealmResults;
+import pl.marczak.cartoonsubscriber.db.Cartoon;
 import pl.marczak.cartoonsubscriber.db.Episode;
+import pl.marczak.cartoonsubscriber.db.RealmCartoon;
 import pl.marczak.cartoonsubscriber.model.CartoonEntity;
 import pl.marczak.cartoonsubscriber.utils.Is;
 import rx.Observable;
 import rx.functions.Func1;
+import rx.functions.Func2;
 
 /**
  * @author Lukasz Marczak
@@ -42,6 +47,46 @@ public class ApiRequest {
 
     public rx.Observable<List<String>> execute() {
         return executeQuery("http://www.watchcartoononline.com/regular-show-pilot");
+    }
+
+    public static List<Cartoon> nonRealmCartoons(RealmResults<RealmCartoon> cartoons) {
+        List<Cartoon> out = new ArrayList<>();
+        for (RealmCartoon c : cartoons) {
+            out.add(new Cartoon(c.getTitle(), c.getInfo(), c.getUrl(), c.getLastEpisode()));
+        }
+        return out;
+    }
+
+    public rx.Observable<List<Episode>> checkNewestEpisodes(Context context) {
+        Realm realm = Realm.getInstance(context);
+        RealmResults<RealmCartoon> cartoons =
+                realm.where(RealmCartoon.class).equalTo("isSubscribed", true).findAll();
+        if (Is.nonEmpty(cartoons)) {
+            List<Cartoon> nonEmptyCartoons = nonRealmCartoons(cartoons);
+            return Observable.from(nonEmptyCartoons)
+                    .flatMap(cartoon -> getLastEpisode(cartoon.url))
+                    .flatMap(episode -> {
+                        for (Cartoon c : nonEmptyCartoons) {
+                            if (isNewEpisode(c, episode)) {
+                                return Observable.just(episode);
+                            }
+                        }
+                        return Observable.empty();
+                    }).toList();
+        }
+        return Observable.empty();
+    }
+
+    private boolean isNewEpisode(Cartoon c, Episode episode) {
+        return cartoonsTheSame(c, episode) && newEpisode(c, episode);
+    }
+
+    private boolean newEpisode(Cartoon c, Episode episode) {
+        return !c.last_episode.equalsIgnoreCase(episode.title);
+    }
+
+    private boolean cartoonsTheSame(Cartoon c, Episode episode) {
+        return episode.title.contains(c.title);
     }
 
     public rx.Observable<List<String>> execute(@Nullable String url) {
@@ -132,6 +177,32 @@ public class ApiRequest {
             entity.imageUrl = imgUrlExtract(image);
             return entity;
         });
+    }
+
+    public rx.Observable<Episode> getLastEpisode(String url) {
+        Log.i(TAG, "getEpisodesWithData: " + url);
+        return JsoupProxy.getJsoupDocument(url).map(document -> {
+                    Log.d(TAG, "calling document: " + (document == null));
+                    if (document == null) {
+                        throw new NullPointerException("Nullable document");
+                    }
+                    Episode episode = null;
+                    Log.i(TAG, "received document " + document.title());
+
+                    Elements elements = document.getElementsByClass("sonra");
+                    if (Is.nullable(elements)) Log.w(TAG, "episodes are empty: ");
+                        // throw new NullPointerException("Nullable episodes");
+                    else {
+                        Element e = elements.first();
+                        String url1 = e.attr("href");
+                        String title = e.attr("title");
+                        Log.d(TAG, "call: " + url1 + "," + title);
+                        episode = new Episode(title, url);
+                    }
+                    return episode;
+                }
+
+        );
     }
 
     private String imgUrlExtract(Element image) {

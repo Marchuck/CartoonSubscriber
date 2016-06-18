@@ -34,10 +34,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.VH> {
         holder.textView.setText(item);
         holder.itemView.setOnClickListener(v -> {
             Context ctx = holder.itemView.getContext();
-//                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(item.url));
-            //   Intent intent = new Intent(ctx, MoreNewsActivity.class);
-            ///    intent.putExtra("URL", item.url);
-            //    ctx.startActivity(intent);
         });
     }
 
@@ -48,12 +44,10 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.VH> {
 
     public static class VH extends RecyclerView.ViewHolder {
         TextView textView;
-        TextView date;
 
         public VH(View v) {
             super(v);
             textView = (TextView) v.findViewById(R.id.text);
-     //       date = (TextView) v.findViewById(R.id.date);
         }
     }
 }

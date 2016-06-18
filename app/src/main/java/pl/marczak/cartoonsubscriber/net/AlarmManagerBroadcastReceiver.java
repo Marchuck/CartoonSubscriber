@@ -33,36 +33,31 @@ public class AlarmManagerBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(final Context context, Intent intent) {
         Log.d(TAG, "onReceive: ");
+
         ApiRequest.create().execute().subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<List<String>>() {
-                    @Override
-                    public void call(List<String> strings) {
-                        Log.d("", "call: ");
-                        App.getInstance(context).episodes = strings;
-                        NotificationCompat.Builder mBuilder =
-                                new NotificationCompat.Builder(context)
-                                        .setSmallIcon(R.drawable.regular)
-                                        .setAutoCancel(true)
-                                        .setSound(getSoundRes())
-                                        .setContentTitle(strings.get(0))
-                                        .setContentText(strings.get(1));
+                .subscribe(strings -> {
+                    Log.d("", "call: ");
+                    App.getInstance(context).episodes = strings;
+                    NotificationCompat.Builder mBuilder =
+                            new NotificationCompat.Builder(context)
+                                    .setSmallIcon(R.drawable.regular)
+                                    .setAutoCancel(true)
+                                    .setSound(getSoundRes())
+                                    .setContentTitle(strings.get(0))
+                                    .setContentText(strings.get(1));
 
-                        Intent intent = new Intent(context, RecentEpisodeActivity.class);
-                        PendingIntent pi = PendingIntent.getActivity(context, 0, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
-                        mBuilder.setContentIntent(pi);
-                        NotificationManager mNotificationManager =
-                                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                        mNotificationManager.notify(0, mBuilder.build());
+                    Intent intent1 = new Intent(context, RecentEpisodeActivity.class);
+                    PendingIntent pi = PendingIntent.getActivity(context, 0, intent1, Intent.FLAG_ACTIVITY_NEW_TASK);
+                    mBuilder.setContentIntent(pi);
+                    NotificationManager mNotificationManager =
+                            (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                    mNotificationManager.notify(0, mBuilder.build());
 
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        Toast.makeText(context, "No available content", Toast.LENGTH_SHORT).show();
-                        Log.e(TAG, "call: " + throwable.getMessage());
-                        throwable.printStackTrace();
-                    }
+                }, throwable -> {
+                    Toast.makeText(context, "No available content", Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "call: " + throwable.getMessage());
+                    throwable.printStackTrace();
                 });
 
     }

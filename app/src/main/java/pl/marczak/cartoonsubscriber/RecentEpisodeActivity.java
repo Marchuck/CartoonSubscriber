@@ -7,7 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
 public class RecentEpisodeActivity extends AppCompatActivity {
-    RecyclerView r;
+    RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,8 +17,8 @@ public class RecentEpisodeActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        r = (RecyclerView) findViewById(R.id.recycler_view);
-        r.setLayoutManager(new LinearLayoutManager(this));
-        r.setAdapter(new NewsAdapter());
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(new NewsAdapter());
     }
 }

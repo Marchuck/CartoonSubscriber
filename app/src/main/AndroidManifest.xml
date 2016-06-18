@@ -3,6 +3,7 @@
     package="pl.marczak.cartoonsubscriber">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
@@ -40,6 +41,11 @@
             android:authorities="pl.marczak.cartoonsubscriber" />
         <service android:name=".net.BoundService" >
         </service>
+        <receiver android:name=".net.NetworkChangeReceiver" >
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

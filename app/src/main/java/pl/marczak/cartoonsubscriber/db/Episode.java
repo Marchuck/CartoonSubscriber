@@ -5,6 +5,7 @@ package pl.marczak.cartoonsubscriber.db;
  * @since 07.06.16.
  */
 public class Episode {
+    public String cartoon;
     public String title;
     public String url;
 
