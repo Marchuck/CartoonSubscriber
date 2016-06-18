@@ -38,7 +38,8 @@
         <provider
             android:name=".db.CartoonsProvider"
             android:authorities="pl.marczak.cartoonsubscriber" />
-
+        <service android:name=".net.BoundService" >
+        </service>
     </application>
 
 </manifest>

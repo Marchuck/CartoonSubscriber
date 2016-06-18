@@ -6,6 +6,9 @@
     tools:context=".right_tab.SubscribedAnimesFragment">
 
     <TextView
+        android:textSize="24sp"
+        android:padding="8sp"
+        android:textColor="@color/colorAccent"
         android:id="@+id/anime_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -23,7 +26,7 @@
         app:whorlview_circle_speed="270"
         app:whorlview_parallax="fast"
         app:whorlview_strokeWidth="6"
-        app:whorlview_sweepAngle="90"></com.tt.whorlviewlibrary.WhorlView>
+        app:whorlview_sweepAngle="90"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/anime_recycler_view"
@@ -33,7 +36,7 @@
         android:visibility="visible" />
     <include
         android:id="@+id/error_layout"
-        tools:visibility="visible"
+        tools:visibility="gone"
         android:visibility="gone"
         layout="@layout/error_layout"/>
 

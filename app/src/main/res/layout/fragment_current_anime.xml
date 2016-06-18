@@ -10,8 +10,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
+        android:layout_margin="16sp"
+        android:padding="8sp"
+        android:textColor="@color/lightText"
         android:textSize="24sp"
-        android:textColor="@android:color/white"
         tools:layout_width="200sp"
         tools:text="REGULAR SHOW" />
 
@@ -24,12 +26,13 @@
         android:maxHeight="200sp">
 
         <WebView
-            android:visibility="gone"
             android:id="@+id/anime_image_webview"
             android:layout_width="wrap_content"
             android:layout_height="200sp"
             android:layout_centerHorizontal="true"
+            android:background="@color/colorPrimary"
             android:maxHeight="200sp"
+            android:visibility="gone"
             tools:layout_width="300sp" />
 
         <com.tt.whorlviewlibrary.WhorlView xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -43,7 +46,7 @@
             app:whorlview_circle_speed="270"
             app:whorlview_parallax="fast"
             app:whorlview_strokeWidth="6"
-            app:whorlview_sweepAngle="90"/>
+            app:whorlview_sweepAngle="90" />
     </RelativeLayout>
 
     <ScrollView
@@ -55,11 +58,16 @@
         <TextView
             android:id="@+id/anime_subtitle"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_margin="8sp"
+            android:textColor="@color/lightText"
+            android:textSize="20sp"
+            tools:text="lorem ipsum" />
     </ScrollView>
+
     <include
         android:id="@+id/error_layout"
-        tools:visibility="visible"
+        layout="@layout/error_layout"
         android:visibility="gone"
-        layout="@layout/error_layout"/>
+        tools:visibility="gone" />
 </RelativeLayout>
