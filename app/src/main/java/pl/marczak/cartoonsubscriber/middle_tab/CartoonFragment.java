@@ -57,41 +57,6 @@ public class CartoonFragment extends Fragment {
         View view = inflater.inflate(R.layout.center_splash, container, false);
         Log.d(TAG, "onCreateView: ");
         ButterKnife.bind(this, view);
-//
-// InputStream sourceIs = getResources().openRawResource(R.raw.logo);
-//        BufferedInputStream bis = null;
-//        try {
-//            bis = new BufferedInputStream(sourceIs, sourceIs.available());
-//            gifFromStream = new GifDrawable(bis);
-//            gifFromStream.start();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
-
-        // Set the adapter
-//        searchView = (SearchView) view.findViewById(R.id.search_view);
-//
-//        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-//        final MyCartoonRecyclerViewAdapter adapter = new MyCartoonRecyclerViewAdapter(mListener);
-//        final FakeCartoonAdapter fakeAdapter = new FakeCartoonAdapter(4);
-//
-//        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-//
-//        recyclerView.setAdapter(adapter);
-//
-////        searchView.setVisibility(View.GONE);
-////        DBSaver<Cartoon> dbSaver = new CartoonSaver(this.getActivity().getApplicationContext());
-//        engine = new CartoonSuggestionsEngine(CartoonFragment.this.getActivity());
-//        engine.getCartoons(getActivity().getApplicationContext(),searchView)
-//                .subscribeOn(Schedulers.trampoline())
-//                .observeOn(AndroidSchedulers.mainThread()).subscribe(new VerboseSubscriber<List<Cartoon>>(TAG) {
-//            @Override
-//            public void onNext(List<Cartoon> cartoons) {
-//                Log.d(TAG, "onNext: "+cartoons.size());
-//                adapter.refresh(cartoons);
-//            }
-//        });
 
         return view;
     }
@@ -99,7 +64,6 @@ public class CartoonFragment extends Fragment {
 
     @Override
     public void onDetach() {
-        gifFromStream.stop();
         mListener = null;
         super.onDetach();
     }

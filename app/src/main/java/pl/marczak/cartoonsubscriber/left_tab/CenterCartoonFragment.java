@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,35 +21,42 @@ import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifImageView;
 import pl.marczak.cartoonsubscriber.R;
 import pl.marczak.cartoonsubscriber.db.Cartoon;
 import pl.marczak.cartoonsubscriber.db.Episode;
 import pl.marczak.cartoonsubscriber.db.EpisodesAdapter;
 import pl.marczak.cartoonsubscriber.model.CartoonEntity;
-import pl.marczak.cartoonsubscriber.model.CartoonEpisodes;
+import pl.marczak.cartoonsubscriber.model.CartoonMetaData;
 import pl.marczak.cartoonsubscriber.net.ApiRequest;
+import pl.marczak.cartoonsubscriber.utils.GiphyProvider;
+import pl.marczak.cartoonsubscriber.utils.Is;
 import pl.marczak.cartoonsubscriber.utils.VerboseSubscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 
-public class CurrentAnimeFragment extends Fragment {
-    public static final String TAG = CurrentAnimeFragment.class.getSimpleName();
-    Callbacks callbacks;
+public class CenterCartoonFragment extends Fragment {
+    public static final String TAG = CenterCartoonFragment.class.getSimpleName();
+    rx.Subscription subscription;
+    @BindView(R.id.anime_image_webview)
+    WebView cartoonImageView;
+    @BindView(R.id.anime_subtitle)
+    TextView aboutTextView;
+    @BindView(R.id.anime_title)
+    TextView titleTextView;
 
-    @BindView(R.id.anime_recycler_view)
-    RecyclerView cartoonsRecyclerView;
     @BindView(R.id.progress_indicator)
     WhorlView progressIndicator;
-    EpisodesAdapter adapter;
     String url;
     String title;
 
-    public CurrentAnimeFragment() {
+    public CenterCartoonFragment() {
     }
 
-    public static CurrentAnimeFragment newInstance(@Nullable Cartoon cartoon) {
-        CurrentAnimeFragment fragment = new CurrentAnimeFragment();
+    public static CenterCartoonFragment newInstance(@Nullable Cartoon cartoon) {
+        CenterCartoonFragment fragment = new CenterCartoonFragment();
         if (cartoon != null) {
             Bundle bundle = new Bundle();
             Log.d(TAG, "title: " + cartoon.title);
@@ -72,35 +80,17 @@ public class CurrentAnimeFragment extends Fragment {
         }
         Log.d(TAG, "onCreate: " + url);
         Log.d(TAG, "onCreate: " + title);
+
         EventBus.getDefault().register(this);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_current_anime_episodes, container, false);
+        View view = inflater.inflate(R.layout.fragment_current_anime, container, false);
         Log.d(TAG, "onCreateView: ");
         ButterKnife.bind(this, view);
-        adapter = new EpisodesAdapter();
-        cartoonsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        callbacks = (Callbacks) getActivity();
-        cartoonsRecyclerView.setAdapter(adapter);
-        adapter.connectClickListener(callbacks);
         progressIndicator.start();
         return view;
-    }
-
-    @Override
-    public void onDestroyView() {
-        EventBus.getDefault().unregister(this);
-        super.onDestroyView();
-    }
-
-    @Subscribe
-    public void onEvent(CartoonEpisodes episodes) {
-        Log.d(TAG, "onEvent: ");
-        progressIndicator.stop();
-        progressIndicator.setVisibility(View.GONE);
-        adapter.refreshDataSet(episodes.episodes);
     }
 
     @Override
@@ -108,7 +98,34 @@ public class CurrentAnimeFragment extends Fragment {
         super.onDetach();
     }
 
-    public interface Callbacks {
-        void onEpisodeSelected(Episode episode);
+    @Override
+    public void onDestroyView() {
+        Is.unsubscribe(subscription);
+        EventBus.getDefault().unregister(this);
+        super.onDestroyView();
     }
+
+    @Subscribe
+    public void onEvent(CartoonMetaData event) {
+        Log.d(TAG, "onEvent: CartoonMetaData");
+        titleTextView.setText(event.title);
+        aboutTextView.setText(event.about);
+//
+//        String preparedGifUrl = "http://api.giphy.com/v1/gifs/search?q=" +
+//                event.title.trim().replaceAll(" ", "+") + "&api_key=dc6zaTOxFJmzC";
+        subscription = GiphyProvider.get(event.title).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new VerboseSubscriber<String>(TAG) {
+                    @Override
+                    public void onNext(String url) {
+                        Log.d(TAG, "onNext: GifDrawable");
+                        progressIndicator.stop();
+                        progressIndicator.setVisibility(View.GONE);
+                        cartoonImageView.setVisibility(View.VISIBLE);
+                        cartoonImageView.loadUrl(url);
+
+                    }
+                });
+    }
+
 }

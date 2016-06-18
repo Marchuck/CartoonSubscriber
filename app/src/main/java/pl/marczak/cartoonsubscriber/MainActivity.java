@@ -13,18 +13,28 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import pl.marczak.cartoonsubscriber.db.Cartoon;
 import pl.marczak.cartoonsubscriber.db.Episode;
+import pl.marczak.cartoonsubscriber.left_tab.CenterCartoonFragment;
 import pl.marczak.cartoonsubscriber.left_tab.CurrentAnimeFragment;
 import pl.marczak.cartoonsubscriber.middle_tab.CartoonFragment;
+import pl.marczak.cartoonsubscriber.model.CartoonEntity;
+import pl.marczak.cartoonsubscriber.model.CartoonEpisodes;
+import pl.marczak.cartoonsubscriber.model.CartoonMetaData;
+import pl.marczak.cartoonsubscriber.net.ApiRequest;
 import pl.marczak.cartoonsubscriber.right_tab.RightNavigatorFragment;
 import pl.marczak.cartoonsubscriber.utils.Const;
 import pl.marczak.cartoonsubscriber.utils.DrawerMode;
+import pl.marczak.cartoonsubscriber.utils.VerboseSubscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity implements RightNavigatorFragment.Callbacks,
         CurrentAnimeFragment.Callbacks {
@@ -39,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements RightNavigatorFra
      * HELPERS & LISTENERS & CALLBACKS
      */
     ActionBarDrawerToggle toggle;
-    Unbinder unbinder;
+
     View.OnClickListener fabListener;
     DrawerLayout.DrawerListener drawerListener;
 
@@ -61,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements RightNavigatorFra
         setFragmentForPlaceholder(Const.LEFT, CurrentAnimeFragment.newInstance(null));
         setFragmentForPlaceholder(Const.RIGHT, RightNavigatorFragment.newInstance(query));
         if (query != null) drawerLayout.openDrawer(Gravity.RIGHT);
+        EventBus.getDefault().register(this);
     }
 
     private void setupViews() {
@@ -104,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements RightNavigatorFra
         drawerListener = null;
         fabListener = null;
         toggle = null;
+        EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
 
@@ -111,9 +123,35 @@ public class MainActivity extends AppCompatActivity implements RightNavigatorFra
     public void onRightItemSelected(Cartoon cartoon) {
         Log.d(TAG, "onRightItemSelected: " + cartoon);
         drawerLayout.closeDrawer(Gravity.RIGHT);
-        CurrentAnimeFragment fragment = CurrentAnimeFragment.newInstance(cartoon);
-        setFragmentForPlaceholder(Const.LEFT, fragment);
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        CurrentAnimeFragment left = CurrentAnimeFragment.newInstance(cartoon);
+        CenterCartoonFragment middle = CenterCartoonFragment.newInstance(cartoon);
+        setFragmentForPlaceholder(Const.LEFT, left);
+        setFragmentForPlaceholder(Const.MIDDLE, middle);
         drawerLayout.openDrawer(Gravity.LEFT);
+        ApiRequest.create()
+                .getEpisodesWithData(cartoon.url)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new VerboseSubscriber<CartoonEntity>(TAG) {
+            @Override
+            public void onNext(CartoonEntity entity) {
+                Log.d(TAG, "onNext: ");
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+                EventBus.getDefault().post(new CartoonMetaData(entity.about, entity.imageUrl, cartoon.title));
+                EventBus.getDefault().post(new CartoonEpisodes(entity.episodes));
+                drawerLayout.openDrawer(Gravity.LEFT);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+            }
+        });
+    }
+
+    @Subscribe
+    public void onEvent(Object s){
+        Log.d(TAG, "onEvent: object");
     }
 
     @Override

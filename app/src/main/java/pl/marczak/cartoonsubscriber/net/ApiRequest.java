@@ -52,31 +52,23 @@ public class ApiRequest {
 
     public rx.Observable<List<String>> executeQuery(List<String> urls) {
         return Observable.from(urls)
-                .flatMap(new Func1<String, Observable<Document>>() {
-                    @Override
-                    public Observable<Document> call(String s) {
-                        return JsoupProxy.getJsoupDocument(s);
+                .flatMap(s -> JsoupProxy.getJsoupDocument(s)).map(document -> {
+                    List<String> emptyList = new ArrayList<>();
+                    emptyList.add("");
+                    emptyList.add("");
+                    if (document == null) {
+                        return emptyList;
                     }
-                }).map(new Func1<Document, List<String>>() {
-                    @Override
-                    public List<String> call(Document document) {
-                        List<String> emptyList = new ArrayList<>();
-                        emptyList.add("");
-                        emptyList.add("");
-                        if (document == null) {
-                            return emptyList;
-                        }
-                        Log.i(TAG, "received document " + document.title());
-                        Elements newest = document.getElementsByClass("menustyle");
-                        if (newest == null || newest.size() == 0) return emptyList;
-                        Element element = newest.get(1);
-                        String[] regularElems = element.text().split("Regular Show");
-                        List<String> lst = new ArrayList<>();
-                        for (int j = 1; j < regularElems.length; j++)
-                            lst.add(regularElems[j].trim());
-                        for (String s : lst) Log.i(TAG, "call: [" + s + "]");
-                        return Arrays.asList(regularElems);
-                    }
+                    Log.i(TAG, "received document " + document.title());
+                    Elements newest = document.getElementsByClass("menustyle");
+                    if (newest == null || newest.size() == 0) return emptyList;
+                    Element element = newest.get(1);
+                    String[] regularElems = element.text().split("Regular Show");
+                    List<String> lst = new ArrayList<>();
+                    for (int j = 1; j < regularElems.length; j++)
+                        lst.add(regularElems[j].trim());
+                    for (String s : lst) Log.i(TAG, "call: [" + s + "]");
+                    return Arrays.asList(regularElems);
                 });
     }
 
@@ -144,6 +136,7 @@ public class ApiRequest {
 
     private String imgUrlExtract(Element image) {
         String[] arr = image.outerHtml().split("\"");
+        if (arr.length < 2) return null;
         for (String a : arr) if (a.contains("http")) return a;
         return "";
     }
