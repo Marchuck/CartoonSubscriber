@@ -1,6 +1,7 @@
 package pl.marczak.cartoonsubscriber.middle_tab;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import pl.marczak.cartoonsubscriber.R;
+import pl.marczak.cartoonsubscriber.experimental.OSXAnimations;
 import pl.marczak.cartoonsubscriber.utils.CartoonSuggestionsEngine;
 
 public class CartoonFragment extends Fragment {
@@ -45,6 +47,12 @@ public class CartoonFragment extends Fragment {
         View view = inflater.inflate(R.layout.center_splash, container, false);
         Log.d(TAG, "onCreateView: ");
         ButterKnife.bind(this, view);
+
+        imageView.setOnClickListener(v -> {
+            OSXAnimations.onViewClickAnimation(imageView, 120, 1.4f, () -> {
+                Snackbar.make(getView(), "Open menu on right", Snackbar.LENGTH_SHORT).show();
+            });
+        });
 
         return view;
     }
