@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import retrofit.RestAdapter;
 import retrofit.converter.GsonConverter;
@@ -48,6 +49,10 @@ public class GiphyProvider {
                 .build();
         return adapter.create(GiphyAPI.class).getGif(query, GiphyAPI.api_key)
                 .map(giphyResponse ->
-                        giphyResponse.data.get(0).images.fixed_height.url);
+                        giphyResponse.data.get(shuffled(giphyResponse.data)).images.fixed_height.url);
+    }
+
+    private static int shuffled(List<GiphyData> data) {
+        return new Random().nextInt(data.size());
     }
 }

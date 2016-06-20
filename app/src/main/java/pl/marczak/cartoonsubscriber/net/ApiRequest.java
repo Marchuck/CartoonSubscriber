@@ -19,8 +19,6 @@ import pl.marczak.cartoonsubscriber.db.RealmCartoon;
 import pl.marczak.cartoonsubscriber.model.CartoonEntity;
 import pl.marczak.cartoonsubscriber.utils.Is;
 import rx.Observable;
-import rx.functions.Func1;
-import rx.functions.Func2;
 
 /**
  * @author Lukasz Marczak
@@ -174,7 +172,11 @@ public class ApiRequest {
             else
                 entity.about = titles.get(0).text();
             Log.d(TAG, "call: 3");
-            entity.imageUrl = imgUrlExtract(image);
+//            try {
+//                entity.imageUrl = imgUrlExtract(image);
+//            } catch (Exception x) {
+//                entity.imageUrl = null;
+//            }
             return entity;
         });
     }
@@ -205,7 +207,7 @@ public class ApiRequest {
         );
     }
 
-    private String imgUrlExtract(Element image) {
+    private String imgUrlExtract(Element image) throws Exception {
         String[] arr = image.outerHtml().split("\"");
         if (arr.length < 2) return null;
         for (String a : arr) if (a.contains("http")) return a;

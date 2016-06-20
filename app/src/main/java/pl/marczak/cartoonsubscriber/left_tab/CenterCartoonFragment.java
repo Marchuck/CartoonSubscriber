@@ -103,13 +103,14 @@ public class CenterCartoonFragment extends Fragment {
     @Subscribe
     public void onEvent(CartoonMetaData event) {
         Log.d(TAG, "onEvent: CartoonMetaData");
-        if (event.title == null || event.about == null) {
+        if (event.title == null || event.about == null|| event.about.trim().isEmpty()) {
             titleTextView.setVisibility(View.GONE);
             aboutTextView.setVisibility(View.GONE);
             progressIndicator.stop();
             progressIndicator.setVisibility(View.GONE);
             cartoonImageView.setVisibility(View.GONE);
             error_layout.setVisibility(View.VISIBLE);
+
         } else {
             titleTextView.setText(event.title);
             aboutTextView.setText(event.about);

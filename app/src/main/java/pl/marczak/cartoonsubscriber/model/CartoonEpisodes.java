@@ -17,4 +17,11 @@ public class CartoonEpisodes {
     public CartoonEpisodes(List<Episode> episodes) {
         this.episodes = episodes;
     }
+
+    public boolean isNewEpisode;
+
+    public CartoonEpisodes withNewEpisode(boolean isNewEpisode) {
+        this.isNewEpisode = isNewEpisode;
+        return this;
+    }
 }

@@ -22,8 +22,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import pl.marczak.cartoonsubscriber.db.Cartoon;
 import pl.marczak.cartoonsubscriber.db.Episode;
+import pl.marczak.cartoonsubscriber.db.PersistanceManager;
+import pl.marczak.cartoonsubscriber.left_tab.CartoonEpisodesFragment;
 import pl.marczak.cartoonsubscriber.left_tab.CenterCartoonFragment;
-import pl.marczak.cartoonsubscriber.left_tab.CurrentAnimeFragment;
 import pl.marczak.cartoonsubscriber.middle_tab.CartoonFragment;
 import pl.marczak.cartoonsubscriber.model.CartoonEntity;
 import pl.marczak.cartoonsubscriber.model.CartoonEpisodes;
@@ -37,7 +38,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity implements RightNavigatorFragment.Callbacks,
-        CurrentAnimeFragment.Callbacks {
+        CartoonEpisodesFragment.Callbacks {
     public static final String TAG = MainActivity.class.getSimpleName();
     /**
      * VIEWS
@@ -68,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements RightNavigatorFra
             query = intent.getStringExtra(SearchManager.QUERY);
         }
         setFragmentForPlaceholder(Const.MIDDLE, CartoonFragment.newInstance());
-        setFragmentForPlaceholder(Const.LEFT, CurrentAnimeFragment.newInstance(null));
+        setFragmentForPlaceholder(Const.LEFT, CartoonEpisodesFragment.newInstance(null));
         setFragmentForPlaceholder(Const.RIGHT, RightNavigatorFragment.newInstance(query));
         if (query != null) drawerLayout.openDrawer(Gravity.RIGHT);
         EventBus.getDefault().register(this);
@@ -123,7 +124,8 @@ public class MainActivity extends AppCompatActivity implements RightNavigatorFra
     public void onRightItemSelected(Cartoon cartoon) {
         Log.d(TAG, "onRightItemSelected: " + cartoon);
         drawerLayout.closeDrawer(Gravity.RIGHT);
-        CurrentAnimeFragment left = CurrentAnimeFragment.newInstance(cartoon);
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        CartoonEpisodesFragment left = CartoonEpisodesFragment.newInstance(cartoon);
         CenterCartoonFragment middle = CenterCartoonFragment.newInstance(cartoon);
         setFragmentForPlaceholder(Const.LEFT, left);
         setFragmentForPlaceholder(Const.MIDDLE, middle);
@@ -135,8 +137,11 @@ public class MainActivity extends AppCompatActivity implements RightNavigatorFra
             @Override
             public void onNext(CartoonEntity entity) {
                 Log.d(TAG, "onNext: ");
+
+                boolean existsNewEpisode = PersistanceManager.checkIfExists(getApplicationContext(), entity);
+
                 EventBus.getDefault().post(new CartoonMetaData(entity.about, entity.imageUrl, cartoon.title));
-                EventBus.getDefault().post(new CartoonEpisodes(entity.episodes));
+                EventBus.getDefault().post(new CartoonEpisodes(entity.episodes).withNewEpisode(existsNewEpisode));
                 drawerLayout.openDrawer(Gravity.LEFT);
             }
 
@@ -146,21 +151,36 @@ public class MainActivity extends AppCompatActivity implements RightNavigatorFra
                 runOnUiThread(() -> {
                     EventBus.getDefault().post(new CartoonMetaData());
                     EventBus.getDefault().post(new CartoonEpisodes());
-                    drawerLayout.openDrawer(Gravity.LEFT);
+                    drawerLayout.closeDrawer(Gravity.LEFT);
+                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.LEFT);
+
                 });
             }
         });
     }
 
+
     @Subscribe
-    public void onEvent(Object s){
+    public void onEvent(Object s) {
         Log.d(TAG, "onEvent: object");
     }
 
     @Override
     public void onEpisodeSelected(Episode episode) {
         Log.d(TAG, "onEpisodeSelected: ");
+        drawerLayout.closeDrawer(Gravity.LEFT);
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.LEFT);
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(episode.url));
         startActivity(browserIntent);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(Gravity.LEFT))
+            drawerLayout.closeDrawer(Gravity.LEFT);
+        else if (drawerLayout.isDrawerOpen(Gravity.RIGHT))
+            drawerLayout.closeDrawer(Gravity.RIGHT);
+        else
+            super.onBackPressed();
     }
 }

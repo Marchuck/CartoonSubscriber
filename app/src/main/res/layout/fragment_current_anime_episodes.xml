@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorPrimaryDark"
     tools:context=".right_tab.SubscribedAnimesFragment">
 
@@ -12,9 +13,25 @@
         android:id="@+id/anime_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:text="EPISODES" />
 
+        android:text="pick season" />
+
+    <com.vi.swipenumberpicker.SwipeNumberPicker
+android:padding="8sp"
+        android:layout_margin="12sp"
+        android:layout_toRightOf="@+id/anime_title"
+        android:id="@+id/season_picker"
+        tools:layout_height="30sp"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:snp_numberColor="@android:color/white"
+        app:snp_arrowColor="@android:color/white"
+        app:snp_backgroundColor="@color/colorAccent"
+        android:visibility="invisible"
+        app:snp_max="1"
+        app:snp_min="3"
+        app:snp_value="2"/>
     <com.tt.whorlviewlibrary.WhorlView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/progress_indicator"
         android:layout_width="1dp"
@@ -32,7 +49,7 @@
         android:id="@+id/anime_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/anime_title"
+        android:layout_below="@+id/season_picker"
         android:visibility="visible" />
     <include
         android:id="@+id/error_layout"

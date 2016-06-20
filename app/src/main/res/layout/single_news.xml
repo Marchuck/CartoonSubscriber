@@ -1,25 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@color/colorPrimary"
     android:layout_height="100sp"
-    xmlns:tools="http://schemas.android.com/tools" >
+    android:background="@color/colorPrimary">
 
     <TextView
-        android:textColor="@color/primaryText"
         android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="AAAAA"
-        android:textSize="15sp"
+        android:layout_centerVertical="true"
         android:padding="10sp"
-        android:layout_centerVertical="true" />
+        android:textColor="@color/primaryText"
+        android:textSize="15sp"
+        tools:text="regular show season 11" />
+
+    <RelativeLayout
+        android:visibility="gone"
+        android:id="@+id/newEpisodeIndicator"
+        android:layout_width="60sp"
+        android:layout_height="60sp"
+        android:layout_margin="8sp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/new_episode_background">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="NEW!"
+            android:textColor="@color/colorPrimary" />
+    </RelativeLayout>
+
 
     <View
-        android:background="@color/colorAccent"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:background="@color/colorAccent" />
 </RelativeLayout>

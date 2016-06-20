@@ -19,6 +19,24 @@ public class RealmCartoon extends RealmObject {
     private boolean isSubscribed;
     private String info;
     private String url;
+    private String imageUrl;
+    private long episodesCount;
+
+    public long getEpisodesCount() {
+        return episodesCount;
+    }
+
+    public void setEpisodesCount(long episodesCount) {
+        this.episodesCount = episodesCount;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 
     public String getInfo() {
         return info;
@@ -69,5 +87,16 @@ public class RealmCartoon extends RealmObject {
     }
 
     public RealmCartoon() {
+    }
+
+    public RealmCartoon(String uuid, String lastEpisode, String title, boolean isSubscribed, String info, String url, String imageUrl, long episodesCount) {
+        this.uuid = uuid;
+        this.lastEpisode = lastEpisode;
+        this.title = title;
+        this.isSubscribed = isSubscribed;
+        this.info = info;
+        this.url = url;
+        this.imageUrl = imageUrl;
+        this.episodesCount = episodesCount;
     }
 }

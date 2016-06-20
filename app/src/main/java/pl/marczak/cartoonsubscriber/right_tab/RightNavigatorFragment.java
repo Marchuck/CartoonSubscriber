@@ -78,7 +78,7 @@ public class RightNavigatorFragment extends Fragment {
         callbacks = (Callbacks) getActivity();
         cartoonAdapter.connectClickListener(callbacks);
 
-        AllCartoonsProvider.getCartoons().subscribeOn(Schedulers.io())
+        AllCartoonsProvider.getCartoons(getActivity().getApplicationContext()).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new VerboseSubscriber<List<Cartoon>>(TAG) {
                     @Override
@@ -92,6 +92,12 @@ public class RightNavigatorFragment extends Fragment {
                             Log.d(TAG, "onSuggested: " + suggestions.size());
                             cartoonAdapter.setDataSet(suggestions);
                         }).init();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+
                     }
                 });
     }

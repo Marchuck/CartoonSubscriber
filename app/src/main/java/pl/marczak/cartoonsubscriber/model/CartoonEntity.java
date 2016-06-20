@@ -14,6 +14,7 @@ public class CartoonEntity {
     public String about;
     public String imageUrl;
     public String title;
+    public String url;
 
     @Override
     public String toString() {
