@@ -18,6 +18,7 @@ import org.junit.runners.MethodSorters;
 
 import pl.marczak.cartoonsubscriber.customExtensions.DrawerExtensions;
 import pl.marczak.cartoonsubscriber.customExtensions.SearchViewExtensions;
+import pl.marczak.cartoonsubscriber.customExtensions.SleepTask;
 import pl.marczak.cartoonsubscriber.right_tab.RightNavigatorFragment;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -49,12 +50,15 @@ public class MainActivityTest {
     @Test
     public void atFirstOpenDrawer() {
         startRightFragment();
-        onView(withId(R.id.drawer_layout)).perform(DrawerExtensions.openDrawer(Gravity.RIGHT));
+        onView(withId(R.id.drawer_layout)).perform(DrawerExtensions.openDrawer(Gravity.RIGHT))
+        .perform(new SleepTask(1000));
     }
 
     @Test
     public void butCheckIfOpened() {
         onView(withId(R.id.drawer_layout))
+                .perform(DrawerExtensions.openDrawer(Gravity.RIGHT))
+                .perform(new SleepTask(1000))
                 .check((view, noViewFoundException) -> {
 
                     if (view instanceof DrawerLayout) {
