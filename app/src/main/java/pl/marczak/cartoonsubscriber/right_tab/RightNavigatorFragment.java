@@ -27,10 +27,13 @@ import rx.schedulers.Schedulers;
 
 public class RightNavigatorFragment extends Fragment {
     public static final String TAG = RightNavigatorFragment.class.getSimpleName();
-    @BindView(R.id.recycler_view)
+
+    @BindView(R.id.recycler_view_cartoon_list)
     RecyclerView recyclerView;
-    @BindView(R.id.search_view)
+
+    @BindView(R.id.search_view_cartoon_list)
     android.support.v7.widget.SearchView searchView;
+
     CartoonAdapter cartoonAdapter;
     private Callbacks callbacks;
     @Nullable

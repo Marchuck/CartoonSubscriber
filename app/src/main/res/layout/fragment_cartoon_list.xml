@@ -5,15 +5,15 @@
     android:layout_height="match_parent">
     <android.support.v7.widget.SearchView
         android:background="@color/colorPrimaryDark"
-        android:id="@+id/search_view"
+        android:id="@+id/search_view_cartoon_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/recycler_view"
+        android:id="@+id/recycler_view_cartoon_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/search_view"
+        android:layout_below="@+id/search_view_cartoon_list"
          android:scrollbars="vertical"
         android:visibility="gone"
         tools:listitem="@layout/fragment_cartoon" />

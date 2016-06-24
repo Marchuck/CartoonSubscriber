@@ -5,7 +5,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-     <application
+
+    <application
         android:name=".di.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -22,10 +23,10 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
-
         </activity>
 
         <receiver android:name=".net.AlarmManagerBroadcastReceiver" />
@@ -38,13 +39,16 @@
         <provider
             android:name=".db.CartoonsProvider"
             android:authorities="pl.marczak.cartoonsubscriber" />
-        <service android:name=".net.BoundService" >
-        </service>
-        <receiver android:name=".net.NetworkChangeReceiver" >
+
+        <service android:name=".net.BoundService"></service>
+
+        <receiver android:name=".net.NetworkChangeReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
+
+        <activity android:name=".utils.TestFragmentActivity"></activity>
     </application>
 
 </manifest>
